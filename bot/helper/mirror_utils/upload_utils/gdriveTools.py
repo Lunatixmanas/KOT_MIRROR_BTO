@@ -832,7 +832,7 @@ class GoogleDriveHelper:
                 if token_service is not None:
                     self.__service = token_service
                     return self.count(link)
-                msg = "File not found." 
+                msg = "𝗙𝗶𝗹𝗲 𝗻𝗼𝘁 𝗳𝗼𝘂𝗻𝗱, 𝗦𝗲𝗻𝗱 𝗩𝗮𝗹𝗶𝗱 𝗗𝗿𝗶𝘃𝗲 𝗟𝗶𝗻𝗸😑" 
             else:
                 msg = f"Error.\n{err}"
         return msg
