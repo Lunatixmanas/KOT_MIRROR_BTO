@@ -441,7 +441,7 @@ class GoogleDriveHelper:
             LOGGER.error(err)
             if "User rate limit exceeded" in str(err):
                 msg = "User rate limit exceeded."
-            elif "𝗙𝗶𝗹𝗲 𝗻𝗼𝘁 𝗳𝗼𝘂𝗻𝗱, 𝗦𝗲𝗻𝗱 𝗩𝗮𝗹𝗶𝗱 𝗗𝗿𝗶𝘃𝗲 𝗟𝗶𝗻𝗸😑" in str(err):
+            elif "File not found" in str(err):
                 token_service = self.alt_authorize()
                 if token_service is not None:
                     self.__service = token_service
@@ -480,7 +480,7 @@ class GoogleDriveHelper:
     def create_directory(self, directory_name, parent_id):
         file_metadata = {
             "name": directory_name,
-            "description": "Uploaded by Mirror-leech-telegram-bot",
+            "description": "Uploaded by MSP Mirrors",
             "mimeType": self.__G_DRIVE_DIR_MIME_TYPE
         }
         if parent_id is not None:
@@ -577,8 +577,8 @@ class GoogleDriveHelper:
                     content += f'<b> | <a href="https://telegra.ph/{self.path[nxt_page]}">Next</a></b>'
                     nxt_page += 1
             Telegraph(access_token=telegraph_token).edit_page(path = self.path[prev_page],
-                                 title = '𝐌𝐒𝐏 𝐌𝐢𝐫𝐫𝐨𝐫 𝗦𝗲𝗮𝗿𝗰𝗵 𝗥𝗲𝘀𝘂𝗹𝘁𝘀​ 🔎',
-                                 author_name='MSP Bots📢',
+                                 title = '𝗠𝗦𝗣 𝗠𝗶𝗿𝗿𝗼𝗿𝘀 𝗦𝗲𝗮𝗿𝗰𝗵 𝗥𝗲𝘀𝘂𝗹𝘁𝘀​ 🔎',
+                                 author_name='𝗠𝗦𝗣 𝗕𝗼𝘁𝘀📢',
                                  author_url='https://telegram.dog/MSPbots',
                                  html_content=content)
         return
@@ -774,8 +774,8 @@ class GoogleDriveHelper:
 
         for content in self.telegraph_content :
             self.path.append(Telegraph(access_token=telegraph_token).create_page(
-                                                    title = '𝐌𝐒𝐏 𝐌𝐢𝐫𝐫𝐨𝐫 𝗦𝗲𝗮𝗿𝗰𝗵 𝗥𝗲𝘀𝘂𝗹𝘁𝘀​ 🔎',
-                                                    author_name='MSP Bots📢',
+                                                    title = '𝗠𝗦𝗣 𝗠𝗶𝗿𝗿𝗼𝗿𝘀 𝗦𝗲𝗮𝗿𝗰𝗵 𝗥𝗲𝘀𝘂𝗹𝘁𝘀​ 🔎',
+                                                    author_name='𝗠𝗦𝗣 𝗕𝗼𝘁𝘀📢',
                                                     author_url='https://telegram.dog/MSPbots',
                                                     html_content=content
                                                     )['path'])
@@ -806,10 +806,10 @@ class GoogleDriveHelper:
             if drive_file['mimeType'] == self.__G_DRIVE_DIR_MIME_TYPE:
                 self.gDrive_directory(**drive_file)
                 msg += f'<code>{name}</code>'
-                msg += f'\n\n<b>➜ 𝗦𝗶𝘇𝗲​ : </b>{get_readable_file_size(self.total_bytes)}'
-                msg += '\n\n<b>➜ 𝗧𝘆𝗽𝗲​ : </b>Folder'
-                msg += f'\n<b>➜ 𝗦𝘂𝗯𝗙𝗼𝗹𝗱𝗲𝗿𝘀​ : </b>{self.total_folders}'
-                msg += f'\n<b>➜ 𝗙𝗶𝗹𝗲𝘀​ : </b>{self.total_files}'
+                msg += f'\n\n<b>𝗦𝗶𝘇𝗲​ : </b>{get_readable_file_size(self.total_bytes)}'
+                msg += '\n\n<b>𝗧𝘆𝗽𝗲​ : </b>Folder'
+                msg += f'\n<b>𝗦𝘂𝗯𝗙𝗼𝗹𝗱𝗲𝗿𝘀​ : </b>{self.total_folders}'
+                msg += f'\n<b>𝗙𝗶𝗹𝗲𝘀​ : </b>{self.total_files}'
             else:
                 msg += f'<code>{name}</code>'
                 try:
@@ -819,9 +819,9 @@ class GoogleDriveHelper:
                 try:
                     self.total_files += 1
                     self.gDrive_file(**drive_file)
-                    msg += f'\n\n<b>➜ 𝗦𝗶𝘇𝗲​ : </b>{get_readable_file_size(self.total_bytes)}'
-                    msg += f'\n\n<b>➜ 𝗧𝘆𝗽𝗲​ : </b>{typee}'
-                    msg += f'\n<b>➜ 𝗙𝗶𝗹𝗲𝘀​ : </b>{self.total_files}'
+                    msg += f'\n\n<b>𝗦𝗶𝘇𝗲​ : </b>{get_readable_file_size(self.total_bytes)}'
+                    msg += f'\n\n<b>𝗧𝘆𝗽𝗲​ : </b>{typee}'
+                    msg += f'\n<b>𝗙𝗶𝗹𝗲𝘀​ : </b>{self.total_files}'
                 except TypeError:
                     pass
         except Exception as err:
@@ -886,7 +886,7 @@ class GoogleDriveHelper:
                 if token_service is not None:
                     self.__service = token_service
                     return self.helper(link)
-                msg = "File not found."  
+                msg = "𝗙𝗶𝗹𝗲 𝗻𝗼𝘁 𝗳𝗼𝘂𝗻𝗱, 𝗦𝗲𝗻𝗱 𝗩𝗮𝗹𝗶𝗱 𝗗𝗿𝗶𝘃𝗲 𝗟𝗶𝗻𝗸😑"  
             else:
                 msg = f"Error.\n{err}"
             return msg, "", "", ""
