@@ -213,9 +213,9 @@ class MirrorListener(listeners.MirrorListeners):
             count = len(files)
             if self.message.chat.type == 'private':
                 msg = f'<code>{link}</code>\n'
-                msg += f'➜ Total Files : {count}'
+                msg += f'Total Files : {count}'
                 if typ != 0:
-                    msg += f'\n➜ Corrupted Files : {typ}'
+                    msg += f'\nCorrupted Files : {typ}'
                 sendMessage(msg, self.bot, self.update)
             else:
                 chat_id = str(self.message.chat.id)[4:]
@@ -249,13 +249,13 @@ class MirrorListener(listeners.MirrorListeners):
                 update_all_messages()
             return
         with download_dict_lock:
-            msg = f'➜ 𝗙𝗶𝗹𝗲 𝗡𝗮𝗺𝗲 : <code>{download_dict[self.uid].name()}</code>\n\n➜ 𝗦𝗶𝘇𝗲 : {size}'
+            msg = f'𝗙𝗶𝗹𝗲 𝗡𝗮𝗺𝗲 : <code>{download_dict[self.uid].name()}</code>\n\n𝗦𝗶𝘇𝗲 : {size}'
             if os.path.isdir(f'{DOWNLOAD_DIR}/{self.uid}/{download_dict[self.uid].name()}'):
-                msg += '\n\n➜ 𝗧𝘆𝗽𝗲 : Folder'
-                msg += f'\n➜ 𝗦𝘂𝗯 𝗙𝗼𝗹𝗱𝗲𝗿𝘀 : {folders}'
-                msg += f'\n➜ 𝗙𝗶𝗹𝗲𝘀 :{files}'
+                msg += '\n\n𝗧𝘆𝗽𝗲 : Folder'
+                msg += f'\n𝗦𝘂𝗯 𝗙𝗼𝗹𝗱𝗲𝗿𝘀 : {folders}'
+                msg += f'\n𝗙𝗶𝗹𝗲𝘀 :{files}'
             else:
-                msg += f'\n\n➜ 𝗧𝘆𝗽𝗲 :{typ}'
+                msg += f'\n\n𝗧𝘆𝗽𝗲 :{typ}'
             buttons = button_build.ButtonMaker()
             if SHORTENER is not None and SHORTENER_API is not None:
                 surl = short_url(link)
@@ -280,11 +280,11 @@ class MirrorListener(listeners.MirrorListeners):
                         buttons.buildbutton("⚡ 𝗜𝗻𝗱𝗲𝘅 𝗟𝗶𝗻𝗸", siurl)
                         if VIEW_LINK:
                             siurls = short_url(share_urls)
-                            buttons.buildbutton("🌐 View Link", siurls)
+                            buttons.buildbutton("🌐 𝗩𝗶𝗲𝘄 𝗟𝗶𝗻𝗸", siurls)
                     else:
                         buttons.buildbutton("⚡ 𝗜𝗻𝗱𝗲𝘅 𝗟𝗶𝗻𝗸", share_url)
                         if VIEW_LINK:
-                            buttons.buildbutton("🌐 View Link", share_urls)
+                            buttons.buildbutton("🌐 𝗩𝗶𝗲𝘄 𝗟𝗶𝗻𝗸", share_urls)
             if BUTTON_FOUR_NAME is not None and BUTTON_FOUR_URL is not None:
                 buttons.buildbutton(f"{BUTTON_FOUR_NAME}", f"{BUTTON_FOUR_URL}")
             if BUTTON_FIVE_NAME is not None and BUTTON_FIVE_URL is not None:
@@ -296,7 +296,7 @@ class MirrorListener(listeners.MirrorListeners):
             else:
                 uname = f'<a href="tg://user?id={self.message.from_user.id}">{self.message.from_user.first_name}</a>'
             if uname is not None:
-                msg += f'\n\n🙋🏻‍♂️ 𝗥𝗲𝗾𝘂𝗲𝘀𝘁𝗲𝗱 𝗕𝘆 :- {uname}\n\n<b>Music🎧 24/7</b>- <b><a href="https://t.me/MSPdiscussion?voicechat">Click Here</a></b>\n\n'
+                msg += f'\n\n🙋🏻‍♂️ 𝗥𝗲𝗾𝘂𝗲𝘀𝘁𝗲𝗱 𝗕𝘆 :- {uname}\n\n<b>𝗠𝘂𝘀𝗶𝗰🎧 24/7</b> - <b><a href="https://t.me/MSPdiscussion?voicechat">Click Here</a></b>\n\n'
             try:
                 fs_utils.clean_download(download_dict[self.uid].path())
             except FileNotFoundError:
