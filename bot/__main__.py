@@ -31,22 +31,22 @@ def stats(update, context):
     cpuUsage = psutil.cpu_percent(interval=0.5)
     memory = psutil.virtual_memory().percent
     disk = psutil.disk_usage('/').percent
-    stats = f'<b>𝗨𝗣𝗧𝗜𝗠𝗘 :</b> <code>{currentTime}</code>\n' \
-            f'<b>𝗧𝗼𝘁𝗮𝗹 𝗗𝗶𝘀𝗸 𝗦𝗽𝗮𝗰𝗲 :</b> <code>{total}</code>\n' \
-            f'<b>𝗨𝘀𝗲𝗱 :</b> <code>{used}</code>' \
-            f'<b>𝗙𝗿𝗲𝗲 :</b> <code>{free}</code>\n\n' \
-            f'<b>𝗨𝗟 :</b> <code>{sent}</code>\n' \
-            f'<b>𝗗𝗟 :</b> <code>{recv}</code>\n\n' \
-            f'<b>𝗖𝗣𝗨 :</b> <code>{cpuUsage}%</code>' \
-            f'<b>𝗥𝗔𝗠 :</b> <code>{memory}%</code>' \
-            f'<b>𝗗𝗜𝗦𝗞 :</b> <code>{disk}%</code>'
+    stats = f'𝗨𝗣𝗧𝗜𝗠𝗘 : <code>{currentTime}</code>\n' \
+            f'𝗧𝗼𝘁𝗮𝗹 𝗗𝗶𝘀𝗸 𝗦𝗽𝗮𝗰𝗲 : <code>{total}</code>\n' \
+            f'𝗨𝘀𝗲𝗱 : <code>{used}</code>' \
+            f'𝗙𝗿𝗲𝗲 : <code>{free}</code>\n\n' \
+            f'𝗨𝗟 : <code>{sent}</code>\n' \
+            f'𝗗𝗟 : <code>{recv}</code>\n\n' \
+            f'𝗖𝗣𝗨 : <code>{cpuUsage}%</code>' \
+            f'𝗥𝗔𝗠 : <code>{memory}%</code>' \
+            f'𝗗𝗜𝗦𝗞 : <code>{disk}%</code>'
     sendMessage(stats, context.bot, update)
 
 
 def start(update, context):
     buttons = button_build.ButtonMaker()
-    buttons.buildbutton("𝐌𝐒𝐏 𝐁𝐨𝐭𝐬", "https://telegram.dog/MSPbots")
-    buttons.buildbutton("𝐒𝐮𝐩𝐩𝐨𝐫𝐭", "https://telegram.dog/MSPdiscussion")
+    buttons.buildbutton("𝗠𝗦𝗣 𝗕𝗼𝘁𝘀", "https://telegram.dog/MSPbots")
+    buttons.buildbutton("𝗦𝘂𝗽𝗽𝗼𝗿𝘁", "https://telegram.dog/MSPdiscussion")
     reply_markup = InlineKeyboardMarkup(buttons.build_menu(2))
     if CustomFilters.authorized_user(update) or CustomFilters.authorized_chat(update):
         start_string = f'''
@@ -58,7 +58,7 @@ Type /{BotCommands.HelpCommand} to get a list of available commands
         sendMarkup('Not Authorized user', context.bot, update, reply_markup)
 
 def restart(update, context):
-    restart_message = sendMessage("𝗥𝗲𝘀𝘁𝗮𝗿𝘁𝗶𝗻𝗴...", context.bot, update)
+    restart_message = sendMessage("𝗥𝗲𝘀𝘁𝗮𝗿𝘁𝗶𝗻𝗴...𝗣𝗹𝗲𝗮𝘀𝗲 𝗪𝗮𝗶𝘁", context.bot, update)
     # Save restart message object in order to reply to it after restarting
     with open(".restartmsg", "w") as f:
         f.truncate(0)
@@ -193,11 +193,11 @@ def main():
     if os.path.isfile(".restartmsg"):
         with open(".restartmsg") as f:
             chat_id, msg_id = map(int, f)
-        bot.edit_message_text("𝗥𝗲𝘀𝘁𝗮𝗿𝘁𝗲𝗱 𝘀𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹𝗹𝘆!", chat_id, msg_id)
+        bot.edit_message_text("𝗥𝗲𝘀𝘁𝗮𝗿𝘁𝗲𝗱 𝘀𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹𝗹𝘆😇", chat_id, msg_id)
         os.remove(".restartmsg")
     elif OWNER_ID:
         try:
-            text = "<b>𝗕𝗼𝘁 𝗥𝗲𝘀𝘁𝗮𝗿𝘁𝗲𝗱!</b>"
+            text = "𝗕𝗼𝘁 𝗥𝗲𝘀𝘁𝗮𝗿𝘁𝗲𝗱, 𝗔𝗱𝗱 𝗧𝗵𝗲 𝗧𝗼𝗿𝗿𝗲𝗻𝘁𝘀 & 𝗟𝗶𝗻𝗸𝘀 𝗔𝗴𝗮𝗶𝗻😌"
             bot.sendMessage(chat_id=OWNER_ID, text=text, parse_mode=ParseMode.HTML)
             if AUTHORIZED_CHATS:
                 for i in AUTHORIZED_CHATS:
@@ -222,7 +222,7 @@ def main():
     dispatcher.add_handler(stats_handler)
     dispatcher.add_handler(log_handler)
     updater.start_polling(drop_pending_updates=IGNORE_PENDING_REQUESTS)
-    LOGGER.info("Bot Started!")
+    LOGGER.info("𝗕𝗼𝘁 𝗦𝘁𝗮𝗿𝘁𝗲𝗱😁")
     signal.signal(signal.SIGINT, fs_utils.exit_clean_up)
 
 app.start()
