@@ -197,7 +197,7 @@ def main():
         os.remove(".restartmsg")
     elif OWNER_ID:
         try:
-            text = "𝗕𝗼𝘁 𝗥𝗲𝘀𝘁𝗮𝗿𝘁𝗲𝗱, 𝗔𝗱𝗱 𝗧𝗵𝗲 𝗧𝗼𝗿𝗿𝗲𝗻𝘁𝘀 & 𝗟𝗶𝗻𝗸𝘀 𝗔𝗴𝗮𝗶𝗻😌"
+            text = "ᴇᴠᴇʀʏ ᴍᴏᴍᴇɴᴛ ɪꜱ ᴀ ꜰʀᴇꜱʜ ʙᴇɢɪɴɪɴɢ\n 𝗕𝗼𝘁 𝗥𝗲𝘀𝘁𝗮𝗿𝘁𝗲𝗱, 𝗔𝗱𝗱 𝗧𝗵𝗲 𝗧𝗼𝗿𝗿𝗲𝗻𝘁𝘀 & 𝗟𝗶𝗻𝗸𝘀 𝗔𝗴𝗮𝗶𝗻😌"
             bot.sendMessage(chat_id=OWNER_ID, text=text, parse_mode=ParseMode.HTML)
             if AUTHORIZED_CHATS:
                 for i in AUTHORIZED_CHATS:
@@ -222,7 +222,7 @@ def main():
     dispatcher.add_handler(stats_handler)
     dispatcher.add_handler(log_handler)
     updater.start_polling(drop_pending_updates=IGNORE_PENDING_REQUESTS)
-    LOGGER.info("𝗕𝗼𝘁 𝗦𝘁𝗮𝗿𝘁𝗲𝗱😁")
+    LOGGER.info("Bot Started!")
     signal.signal(signal.SIGINT, fs_utils.exit_clean_up)
 
 app.start()
