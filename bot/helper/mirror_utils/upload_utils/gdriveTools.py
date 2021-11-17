@@ -165,7 +165,7 @@ class GoogleDriveHelper:
         # File body description
         file_metadata = {
             'name': file_name,
-            'description': 'Mirror-leech-telegram-bot',
+            'description': 'MSP Mirrors',
             'mimeType': mime_type,
         }
         try:
@@ -376,10 +376,10 @@ class GoogleDriveHelper:
                     msg = self.deletefile(durl)
                     LOGGER.info(f"{msg}")
                     return "your clone has been stopped and cloned data has been deleted!", "cancelled"
-                msg += f'<code>{meta.get("name")}</code>\n\n<b>➜ Size: </b>{get_readable_file_size(self.transferred_size)}'
-                msg += '\n\n<b>➜ 𝗧𝘆𝗽𝗲​ : </b>Folder'
-                msg += f'\n<b>➜ 𝗦𝘂𝗯𝗙𝗼𝗹𝗱𝗲𝗿𝘀​ : </b>{self.total_folders}'
-                msg += f'\n<b>➜ 𝗙𝗶𝗹𝗲𝘀​ : </b>{self.total_files}'
+                msg += f'<code>{meta.get("name")}</code>\n\n<b>Size: </b>{get_readable_file_size(self.transferred_size)}'
+                msg += '\n\n<b>𝗧𝘆𝗽𝗲​ : </b>Folder'
+                msg += f'\n<b>𝗦𝘂𝗯𝗙𝗼𝗹𝗱𝗲𝗿𝘀​ : </b>{self.total_folders}'
+                msg += f'\n<b>𝗙𝗶𝗹𝗲𝘀​ : </b>{self.total_files}'
                 buttons = button_build.ButtonMaker()
                 if SHORTENER is not None and SHORTENER_API is not None:
                     surl = short_url(durl)
@@ -409,8 +409,8 @@ class GoogleDriveHelper:
                 except:
                     typ = 'File'
                 try:
-                    msg += f'\n\n<b>➜ 𝗧𝘆𝗽𝗲 ​: </b>{get_readable_file_size(int(meta.get("size")))}'
-                    msg += f'\n\n<b>➜ 𝗧𝘆𝗽𝗲​ : </b>{typ}'
+                    msg += f'\n\n<b>𝗧𝘆𝗽𝗲 ​: </b>{get_readable_file_size(int(meta.get("size")))}'
+                    msg += f'\n\n<b>𝗧𝘆𝗽𝗲​ : </b>{typ}'
                 except TypeError:
                     pass
                 if INDEX_URL is not None:
@@ -422,11 +422,11 @@ class GoogleDriveHelper:
                         buttons.buildbutton("⚡ 𝗜𝗻𝗱𝗲𝘅 𝗟𝗶𝗻𝗸", siurl)
                         if VIEW_LINK:
                             siurls = short_url(urls)
-                            buttons.buildbutton("🌐 View Link", siurls)
+                            buttons.buildbutton("🌐 𝗩𝗶𝗲𝘄 𝗟𝗶𝗻𝗸", siurls)
                     else:
                         buttons.buildbutton("⚡ 𝗜𝗻𝗱𝗲𝘅 𝗟𝗶𝗻𝗸", url)
                         if VIEW_LINK:
-                            buttons.buildbutton("🌐 View Link", urls)
+                            buttons.buildbutton("🌐 𝗩𝗶𝗲𝘄 𝗟𝗶𝗻𝗸", urls)
             if BUTTON_FOUR_NAME is not None and BUTTON_FOUR_URL is not None:
                 buttons.buildbutton(f"{BUTTON_FOUR_NAME}", f"{BUTTON_FOUR_URL}")
             if BUTTON_FIVE_NAME is not None and BUTTON_FIVE_URL is not None:
@@ -441,12 +441,12 @@ class GoogleDriveHelper:
             LOGGER.error(err)
             if "User rate limit exceeded" in str(err):
                 msg = "User rate limit exceeded."
-            elif "File not found" in str(err):
+            elif "𝗙𝗶𝗹𝗲 𝗻𝗼𝘁 𝗳𝗼𝘂𝗻𝗱, 𝗦𝗲𝗻𝗱 𝗩𝗮𝗹𝗶𝗱 𝗗𝗿𝗶𝘃𝗲 𝗟𝗶𝗻𝗸😑" in str(err):
                 token_service = self.alt_authorize()
                 if token_service is not None:
                     self.__service = token_service
                     return self.clone(link)
-                msg = "File not found."
+                msg = "𝗙𝗶𝗹𝗲 𝗻𝗼𝘁 𝗳𝗼𝘂𝗻𝗱, 𝗦𝗲𝗻𝗱 𝗩𝗮𝗹𝗶𝗱 𝗗𝗿𝗶𝘃𝗲 𝗟𝗶𝗻𝗸😑"
             else:
                 msg = f"Error.\n{err}"
             return msg, ""
