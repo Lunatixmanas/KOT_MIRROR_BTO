@@ -131,32 +131,32 @@ def get_readable_message():
             ]:
                 msg += f"\n{get_progress_bar_string(download)} {download.progress()}"
                 if download.status() == MirrorStatus.STATUS_CLONING:
-                    msg += f"\n<b>➜ 𝗖𝗹𝗼𝗻𝗲𝗱 :</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
+                    msg += f"\n<b>𝗖𝗹𝗼𝗻𝗲𝗱 :</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
                 elif download.status() == MirrorStatus.STATUS_UPLOADING:
-                    msg += f"\n<b>➜ 𝗨𝗽𝗹𝗼𝗮𝗱𝗲𝗱 :</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
+                    msg += f"\n<b>𝗨𝗽𝗹𝗼𝗮𝗱𝗲𝗱 :</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
                 else:
-                    msg += f"\n<b>➜ 𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗲𝗱 :</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
-                msg += f"\n<b>➜ 𝗦𝗽𝗲𝗲𝗱 :</b> {download.speed()} | <b>ETA:</b> {download.eta()}"
+                    msg += f"\n<b>𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗲𝗱 :</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
+                msg += f"\n<b>𝗦𝗽𝗲𝗲𝗱 :</b> {download.speed()} | <b>ETA:</b> {download.eta()}"
                 if reply_to:
-                    msg += f"\n<b>➜ 𝗥𝗲𝗾𝘂𝗲𝘀𝘁𝗲𝗱 𝗕𝘆 : <a href='tg://user?id={download.message.from_user.id}'>{download.message.from_user.first_name}</a></b>"
+                    msg += f"\n<b>𝗥𝗲𝗾𝘂𝗲𝘀𝘁𝗲𝗱 𝗕𝘆 : <a href='tg://user?id={download.message.from_user.id}'>{download.message.from_user.first_name}</a></b>"
                 else:
-                    msg += f"\n<b>➜ 𝗥𝗲𝗾𝘂𝗲𝘀𝘁𝗲𝗱 𝗕𝘆 : <a href='tg://user?id={download.message.from_user.id}'>{download.message.from_user.first_name}</a></b>"
+                    msg += f"\n<b>𝗥𝗲𝗾𝘂𝗲𝘀𝘁𝗲𝗱 𝗕𝘆 : <a href='tg://user?id={download.message.from_user.id}'>{download.message.from_user.first_name}</a></b>"
                 # if hasattr(download, 'is_torrent'):
                 try:
-                    msg += f"\n<b>➜ 𝗨𝗦𝗘𝗥 𝗜𝗗 :</b><code>/warn {download.message.from_user.id}</code>"
+                    msg += f"\n<b>𝗨𝗦𝗘𝗥 𝗜𝗗 :</b><code>/warn {download.message.from_user.id}</code>"
                 except:
                     pass
                 try:
-                    msg += f"\n<b>➜ 𝗦𝗲𝗲𝗱𝗲𝗿𝘀 :</b> {download.aria_download().num_seeders}" \
-                           f" | <b>➜ 𝗣𝗲𝗲𝗿𝘀 :</b> {download.aria_download().connections}"
+                    msg += f"\n<b>𝗦𝗲𝗲𝗱𝗲𝗿𝘀 :</b> {download.aria_download().num_seeders}" \
+                           f" | <b>𝗣𝗲𝗲𝗿𝘀 :</b> {download.aria_download().connections}"
                 except:
                     pass
                 try:
-                    msg += f"\n<b>➜ 𝗦𝗲𝗲𝗱𝗲𝗿𝘀 :</b> {download.torrent_info().num_seeds}" \
-                           f" | <b>➜ 𝗟𝗲𝗲𝗰𝗵𝗲𝗿𝘀 :</b> {download.torrent_info().num_leechs}"
+                    msg += f"\n<b>𝗦𝗲𝗲𝗱𝗲𝗿𝘀 :</b> {download.torrent_info().num_seeds}" \
+                           f" | <b>𝗟𝗲𝗲𝗰𝗵𝗲𝗿𝘀 :</b> {download.torrent_info().num_leechs}"
                 except:
                     pass
-                msg += f"\n<b>➜ 𝗧𝗼 𝗖𝗮𝗻𝗰𝗲𝗹 :</b><code>/{BotCommands.CancelMirror} {download.gid()}</code>\n\n════════════════════════════════════"
+                msg += f"\n<b>𝗧𝗼 𝗖𝗮𝗻𝗰𝗲𝗹 :</b><code>/{BotCommands.CancelMirror} {download.gid()}</code>\n\n════════════════════════════════"
             msg += "\n\n"
             if STATUS_LIMIT is not None and index == STATUS_LIMIT:
                 break
