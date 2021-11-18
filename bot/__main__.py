@@ -197,7 +197,7 @@ def main():
         os.remove(".restartmsg")
     elif OWNER_ID:
         try:
-            text = "<b>𝙀𝙫𝙚𝙧𝙮 𝙈𝙤𝙢𝙚𝙣𝙩 𝙞𝙨 𝙖 𝙁𝙧𝙚𝙨𝙝 𝘽𝙚𝙜𝙞𝙣𝙞𝙣𝙜. 𝗕𝗼𝘁 𝗥𝗲𝘀𝘁𝗮𝗿𝘁𝗲𝗱!</b>"
+            text = "<b>ᴇᴠᴇʀʏ ᴍᴏᴍᴇᴍᴛ ɪꜱ ᴀ ꜰʀᴇꜱʜ ʙᴇɢɪɴɪɴɢ. 𝗕𝗼𝘁 𝗥𝗲𝘀𝘁𝗮𝗿𝘁𝗲𝗱!</b>"
             bot.sendMessage(chat_id=OWNER_ID, text=text, parse_mode=ParseMode.HTML)
             if AUTHORIZED_CHATS:
                 for i in AUTHORIZED_CHATS:
