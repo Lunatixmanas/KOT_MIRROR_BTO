@@ -2,32 +2,25 @@ import logging
 import os
 import threading
 import time
-import random
-import string
 import subprocess
 import requests
-import json
-
-import aria2p
-import qbittorrentapi as qba
-import telegram.ext as tg
-from dotenv import load_dotenv
-from pyrogram import Client
-from telegraph import Telegraph
-
-import psycopg2
-from psycopg2 import Error
-
 import socket
 import faulthandler
+import aria2p
+import psycopg2
+import qbittorrentapi as qba
+import telegram.ext as tg
+
+from pyrogram import Client
+from psycopg2 import Error
+from dotenv import load_dotenv
+from requests.exceptions import RequestException
+
 faulthandler.enable()
 
 socket.setdefaulttimeout(600)
 
 botStartTime = time.time()
-if os.path.exists('log.txt'):
-    with open('log.txt', 'r+') as f:
-        f.truncate(0)
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     handlers=[logging.FileHandler('log.txt'), logging.StreamHandler()],
@@ -35,33 +28,51 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 LOGGER = logging.getLogger(__name__)
 
-CONFIG_FILE_URL = os.environ.get('CONFIG_FILE_URL', None)
-if CONFIG_FILE_URL is not None:
-    res = requests.get(CONFIG_FILE_URL)
-    if res.status_code == 200:
-        with open('config.env', 'wb+') as f:
-            f.write(res.content)
-            f.close()
-    else:
-        logging.error(f"Failed to download config.env {res.status_code}")
 
-load_dotenv('config.env')
+load_dotenv('config.env', override=True)
 
-SERVER_PORT = os.environ.get('SERVER_PORT', None)
+
+def getConfig(name: str):
+    return os.environ[name]
+
+try:
+    NETRC_URL = getConfig('NETRC_URL')
+    if len(NETRC_URL) == 0:
+        raise KeyError
+    try:
+        res = requests.get(NETRC_URL)
+        if res.status_code == 200:
+            with open('.netrc', 'wb+') as f:
+                f.write(res.content)
+                f.close()
+        else:
+            logging.error(f"Failed to download .netrc {res.status_code}")
+    except RequestException as e:
+        logging.error(str(e))
+except KeyError:
+    pass
+try:
+    SERVER_PORT = getConfig('SERVER_PORT')
+    if len(SERVER_PORT) == 0:
+        raise KeyError
+except KeyError:
+    SERVER_PORT = 80
+
 PORT = os.environ.get('PORT', SERVER_PORT)
 web = subprocess.Popen([f"gunicorn wserver:start_server --bind 0.0.0.0:{PORT} --worker-class aiohttp.GunicornWebWorker"], shell=True)
 alive = subprocess.Popen(["python3", "alive.py"])
-subprocess.run(["mkdir", "-p", "qBittorrent/config"])
-subprocess.run(["cp", "qBittorrent.conf", "qBittorrent/config/qBittorrent.conf"])
 nox = subprocess.Popen(["qbittorrent-nox", "--profile=."])
-time.sleep(1)
+if not os.path.exists('.netrc'):
+    subprocess.run(["touch", ".netrc"])
+subprocess.run(["chmod", "600", ".netrc"])
+subprocess.run(["chmod", "+x", "aria.sh"])
+subprocess.run(["./aria.sh"], shell=True)
+time.sleep(0.5)
+
 Interval = []
 DRIVES_NAMES = []
 DRIVES_IDS = []
 INDEX_URLS = []
-
-def getConfig(name: str):
-    return os.environ[name]
 
 def mktable():
     try:
@@ -90,15 +101,17 @@ aria2 = aria2p.API(
     )
 )
 
-
 def get_client() -> qba.TorrentsAPIMixIn:
-    qb_client = qba.Client(host="localhost", port=8090, username="admin", password="adminadmin")
-    try:
-        qb_client.auth_log_in()
-        return qb_client
-    except qba.LoginFailed as e:
-        logging.error(str(e))
-        return None
+    return qba.Client(host="localhost", port=8090)
+
+"""
+trackers = subprocess.check_output(["curl -Ns https://raw.githubusercontent.com/XIU2/TrackersListCollection/master/all.txt https://ngosang.github.io/trackerslist/trackers_all_http.txt https://newtrackon.com/api/all | awk '$0'"], shell=True).decode('utf-8')
+
+trackerslist = set(trackers.split("\n"))
+trackerslist.remove("")
+trackerslist = "\n\n".join(trackerslist)
+get_client().application.set_preferences({"add_trackers":f"{trackerslist}"})
+"""
 
 
 DOWNLOAD_DIR = None
@@ -106,16 +119,12 @@ BOT_TOKEN = None
 
 download_dict_lock = threading.Lock()
 status_reply_dict_lock = threading.Lock()
-search_dict_lock = threading.Lock()
 # Key: update.effective_chat.id
 # Value: telegram.Message
 status_reply_dict = {}
 # Key: update.message.message_id
 # Value: An object of Status
 download_dict = {}
-# key: search_id
-# Value: client, search_results, total_results, total_pages, pageNo, start
-search_dict = {}
 # Stores list of users and chats the bot is authorized to use in
 AUTHORIZED_CHATS = set()
 SUDO_USERS = set()
@@ -189,21 +198,14 @@ if DB_URI is not None:
 LOGGER.info("Generating USER_SESSION_STRING")
 app = Client('pyrogram', api_id=int(TELEGRAM_API), api_hash=TELEGRAM_HASH, bot_token=BOT_TOKEN, workers=343)
 
-# Generate Telegraph Token
-sname = ''.join(random.SystemRandom().choices(string.ascii_letters, k=8))
-LOGGER.info("Generating TELEGRAPH_TOKEN using '" + sname + "' name")
-telegraph = Telegraph()
-telegraph.create_account(short_name=sname)
-telegraph_token = telegraph.get_access_token()
-
 try:
     TG_SPLIT_SIZE = getConfig('TG_SPLIT_SIZE')
-    if len(TG_SPLIT_SIZE) == 0 or int(TG_SPLIT_SIZE) > 2097152000:
+    if len(TG_SPLIT_SIZE) == 0 or int(TG_SPLIT_SIZE) > 2097151000:
         raise KeyError
     else:
         TG_SPLIT_SIZE = int(TG_SPLIT_SIZE)
 except KeyError:
-    TG_SPLIT_SIZE = 2097152000
+    TG_SPLIT_SIZE = 2097151000
 try:
     STATUS_LIMIT = getConfig('STATUS_LIMIT')
     if len(STATUS_LIMIT) == 0:
@@ -238,13 +240,18 @@ except KeyError:
 try:
     INDEX_URL = getConfig('INDEX_URL')
     if len(INDEX_URL) == 0:
-        INDEX_URL = None
-        INDEX_URLS.append(None)
+        raise KeyError
     else:
         INDEX_URLS.append(INDEX_URL)
 except KeyError:
     INDEX_URL = None
     INDEX_URLS.append(None)
+try:
+    SEARCH_API_LINK = getConfig('SEARCH_API_LINK')
+    if len(SEARCH_API_LINK) == 0:
+        raise KeyError
+except KeyError:
+    SEARCH_API_LINK = None
 try:
     TORRENT_DIRECT_LIMIT = getConfig('TORRENT_DIRECT_LIMIT')
     if len(TORRENT_DIRECT_LIMIT) == 0:
@@ -373,37 +380,44 @@ try:
 except KeyError:
     CUSTOM_FILENAME = None
 try:
-    RECURSIVE_SEARCH = getConfig('RECURSIVE_SEARCH')
-    RECURSIVE_SEARCH = RECURSIVE_SEARCH.lower() == 'true'
+    PHPSESSID = getConfig('PHPSESSID')
+    CRYPT = getConfig('CRYPT')
+    if len(PHPSESSID) == 0 or len(CRYPT) == 0:
+        raise KeyError
 except KeyError:
-    RECURSIVE_SEARCH = False
+    PHPSESSID = None
+    CRYPT = None
 try:
     TOKEN_PICKLE_URL = getConfig('TOKEN_PICKLE_URL')
     if len(TOKEN_PICKLE_URL) == 0:
-        TOKEN_PICKLE_URL = None
-    else:
+        raise KeyError
+    try:
         res = requests.get(TOKEN_PICKLE_URL)
         if res.status_code == 200:
             with open('token.pickle', 'wb+') as f:
                 f.write(res.content)
                 f.close()
         else:
-            logging.error(f"Failed to download token.pickle {res.status_code}")
-            raise KeyError
+            logging.error(f"Failed to download token.pickle, link got HTTP response: {res.status_code}")
+    except RequestException as e:
+        logging.error(str(e))
 except KeyError:
     pass
 try:
     ACCOUNTS_ZIP_URL = getConfig('ACCOUNTS_ZIP_URL')
     if len(ACCOUNTS_ZIP_URL) == 0:
-        ACCOUNTS_ZIP_URL = None
+        raise KeyError
     else:
-        res = requests.get(ACCOUNTS_ZIP_URL)
-        if res.status_code == 200:
-            with open('accounts.zip', 'wb+') as f:
-                f.write(res.content)
-                f.close()
-        else:
-            logging.error(f"Failed to download accounts.zip {res.status_code}")
+        try:
+            res = requests.get(ACCOUNTS_ZIP_URL)
+            if res.status_code == 200:
+                with open('accounts.zip', 'wb+') as f:
+                    f.write(res.content)
+                    f.close()
+            else:
+                logging.error(f"Failed to download accounts.zip, link got HTTP response: {res.status_code}")
+        except RequestException as e:
+            logging.error(str(e))
             raise KeyError
         subprocess.run(["unzip", "-q", "-o", "accounts.zip"])
         os.remove("accounts.zip")
@@ -412,16 +426,33 @@ except KeyError:
 try:
     MULTI_SEARCH_URL = getConfig('MULTI_SEARCH_URL')
     if len(MULTI_SEARCH_URL) == 0:
-        MULTI_SEARCH_URL = None
-    else:
+        raise KeyError
+    try:
         res = requests.get(MULTI_SEARCH_URL)
         if res.status_code == 200:
             with open('drive_folder', 'wb+') as f:
                 f.write(res.content)
                 f.close()
         else:
-            logging.error(f"Failed to download drive_folder {res.status_code}")
-            raise KeyError
+            logging.error(f"Failed to download drive_folder, link got HTTP response: {res.status_code}")
+    except RequestException as e:
+        logging.error(str(e))
+except KeyError:
+    pass
+try:
+    YT_COOKIES_URL = getConfig('YT_COOKIES_URL')
+    if len(YT_COOKIES_URL) == 0:
+        raise KeyError
+    try:
+        res = requests.get(YT_COOKIES_URL)
+        if res.status_code == 200:
+            with open('cookies.txt', 'wb+') as f:
+                f.write(res.content)
+                f.close()
+        else:
+            logging.error(f"Failed to download cookies.txt, link got HTTP response: {res.status_code}")
+    except RequestException as e:
+        logging.error(str(e))
 except KeyError:
     pass
 
@@ -442,11 +473,6 @@ if os.path.exists('drive_folder'):
             except IndexError as e:
                 INDEX_URLS.append(None)
 
-SEARCH_PLUGINS = os.environ.get('SEARCH_PLUGINS', None)
-if SEARCH_PLUGINS is not None:
-    SEARCH_PLUGINS = json.loads(SEARCH_PLUGINS)
-    qbclient = get_client()
-    qbclient.search_install_plugin(SEARCH_PLUGINS)
 
 updater = tg.Updater(token=BOT_TOKEN, request_kwargs={'read_timeout': 30, 'connect_timeout': 15})
 bot = updater.bot
