@@ -45,8 +45,8 @@ def stats(update, context):
 
 def start(update, context):
     buttons = button_build.ButtonMaker()
-    buttons.buildbutton("𝗠𝗦𝗣 𝗕𝗼𝘁𝘀", "https://telegram.dog/MSPbots")
-    buttons.buildbutton("𝗦𝘂𝗽𝗽𝗼𝗿𝘁", "https://telegram.dog/MSPdiscussion")
+    buttons.buildbutton("KOT BOTS", "https://telegram.dog/KOT_BOTS")
+    buttons.buildbutton("KOT SUPPORT", "https://telegram.dog/KOT_REPORS")
     reply_markup = InlineKeyboardMarkup(buttons.build_menu(2))
     if CustomFilters.authorized_user(update) or CustomFilters.authorized_chat(update):
         start_string = f'''
@@ -197,7 +197,7 @@ def main():
         os.remove(".restartmsg")
     elif OWNER_ID:
         try:
-            text = "<b>ᴇᴠᴇʀʏ ᴍᴏᴍᴇᴍᴛ ɪꜱ ᴀ ꜰʀᴇꜱʜ ʙᴇɢɪɴɪɴɢ. 𝗕𝗼𝘁 𝗥𝗲𝘀𝘁𝗮𝗿𝘁𝗲𝗱!</b>"
+            text = "<b>Eᴠᴇʀʏ Mᴏᴍᴇᴍᴛ Iꜱ ᴀ Fʀᴇꜱʜ Bᴇɢɪɴɪɴɢ. 𝗕𝗼𝘁 𝗥𝗲𝘀𝘁𝗮𝗿𝘁𝗲𝗱!</b>"
             bot.sendMessage(chat_id=OWNER_ID, text=text, parse_mode=ParseMode.HTML)
             if AUTHORIZED_CHATS:
                 for i in AUTHORIZED_CHATS:
