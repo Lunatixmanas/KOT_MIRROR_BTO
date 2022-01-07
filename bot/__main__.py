@@ -142,9 +142,9 @@ help_string_telegraph = f'''<br>
 <b>/{BotCommands.StatsCommand}</b>: Show Stats of the machine the bot is hosted on
 '''
 help = Telegraph(access_token=telegraph_token).create_page(
-        title='Mirrorbot Help',
+        title=' kot mirrorbot Help',
         author_name='Mirrorbot',
-        author_url='https://github.com/anasty17/mirror-leech-telegram-bot',
+        author_url='https://t.me/KOT_SOURCE_CODE',
         html_content=help_string_telegraph,
     )["path"]
 
@@ -156,7 +156,7 @@ help_string = f'''
 
 def bot_help(update, context):
     button = button_build.ButtonMaker()
-    button.buildbutton("𝗣𝗜𝗡𝗚 𝗛𝗘𝗥𝗘", f"https://telegram.dog/BaashaBaii")
+    button.buildbutton("𝗣𝗜𝗡𝗚 𝗛𝗘𝗥𝗘", f"https://telegram.dog/KOT_FREE_DE_LA_HOYA_OFF")
     reply_markup = InlineKeyboardMarkup(button.build_menu(1))
     sendMarkup(help_string, context.bot, update, reply_markup)
 
